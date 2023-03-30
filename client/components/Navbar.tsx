@@ -1,16 +1,20 @@
+import Link from "next/link";
+
 const Navbar = () => {
   return (
-    <nav className="navbar bg-base-100">
+    <nav className="fixed top-0 left-0 navbar bg-base-100">
       <div className="flex-1">
-        <a className="btn btn-ghost normal-case text-xl">daisyUI</a>
+        <Link href="/" className="btn btn-ghost no-animation normal-case text-xl">
+          KUChat
+        </Link>
       </div>
       <div className="flex-none">
         <ul className="menu menu-horizontal px-1">
           <li>
-            <a>Item 1</a>
+            <Link href="/contacts">Chat</Link>
           </li>
           <li>
-            <a>Item 3</a>
+            <Link href="/">Account</Link>
           </li>
         </ul>
       </div>
