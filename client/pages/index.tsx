@@ -10,7 +10,7 @@ const Home: NextPage = () => {
           <Card
             title="Chat"
             description="description"
-            link="/contacts"
+            link="/chat"
             className="mx-auto"
           />
           <Card
