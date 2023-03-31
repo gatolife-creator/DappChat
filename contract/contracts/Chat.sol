@@ -14,6 +14,7 @@ contract Chat {
 
     mapping(uint256 => Message) private messages;
     uint256 private messageCount;
+    mapping(address => address[]) private correspondents;
 
     function post(address _to, string memory _text) public {
         // msg.sender から呼び出された場合、代替関数から呼び出された場合、gasを節約できるように、
@@ -26,19 +27,24 @@ contract Chat {
             _text,
             block.timestamp
         );
+        correspondents[msg.sender].push(toAddress);
         messageCount++;
     }
 
+    function getCorrespondents() public view returns (address[] memory) {
+        return correspondents[msg.sender];
+    }
+
     function getConversations(
-        address address1,
-        address address2
+        address addr1,
+        address addr2
     ) public view returns (Message[] memory) {
         Message[] memory resultMessages = new Message[](messageCount);
         uint256 index = 0;
         for (uint256 i = 0; i < messageCount; i++) {
             if (
-                (messages[i].to == address1 && messages[i].from == address2) ||
-                (messages[i].to == address2 && messages[i].from == address1)
+                (messages[i].to == addr1 && messages[i].from == addr2) ||
+                (messages[i].to == addr2 && messages[i].from == addr1)
             ) {
                 resultMessages[index] = messages[i];
                 index++;

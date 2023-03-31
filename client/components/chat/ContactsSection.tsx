@@ -1,28 +1,23 @@
 import Avatar from "boring-avatars";
+import { useWallet } from "../../hooks/useWallet";
+import { useChatContract } from "../../hooks/useChatContract";
 
-type UserType = {
+export type UserType = {
   name: string;
   latestMessage: string;
   latestTime: number;
 };
 
 const ContactsSection = () => {
-  const userInfo: UserType[] = [
-    { name: "bob", latestMessage: "hello", latestTime: Date.now() },
-    { name: "bob", latestMessage: "hello", latestTime: Date.now() },
-    { name: "bob", latestMessage: "hello", latestTime: Date.now() },
-    { name: "bob", latestMessage: "hello", latestTime: Date.now() },
-    { name: "bob", latestMessage: "hello", latestTime: Date.now() },
-    { name: "bob", latestMessage: "hello", latestTime: Date.now() },
-    { name: "bob", latestMessage: "hello", latestTime: Date.now() },
-    { name: "bob", latestMessage: "hello", latestTime: Date.now() },
-    { name: "bob", latestMessage: "hello", latestTime: Date.now() },
-    { name: "bob", latestMessage: "hello", latestTime: Date.now() },
-    { name: "bob", latestMessage: "hello", latestTime: Date.now() },
-    { name: "bob", latestMessage: "hello", latestTime: Date.now() },
-    { name: "bob", latestMessage: "hello", latestTime: Date.now() },
-    { name: "bob", latestMessage: "hello", latestTime: Date.now() },
-  ];
+  const { currentAccount } = useWallet();
+  const { correspondents } = useChatContract({ currentAccount });
+  const userInfo = correspondents.map((correspondent: string) => {
+    return {
+      name: correspondent.slice(0, 6),
+      latestMessage: "latestMessage",
+      latestTime: Date.now(),
+    };
+  });
 
   return (
     <div className="inline-block w-[350px] h-[75vh] bg-white rounded-3xl overflow-auto scrollbar-hide">

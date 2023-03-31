@@ -4,7 +4,7 @@ import abi from "../utils/Chat.json";
 import { getEthereum } from "../utils/ethereum";
 import { Chat } from "../typechain-types";
 
-const CONTRACT_ADDRESS = "0x688a84251DD8c02760368ed3d9885D3667FFfa65";
+const CONTRACT_ADDRESS = "0x1046DC619f31296455aCBBf76687B36C80d92113";
 const CONTRACT_ABI = abi.abi;
 
 type PropsSendMessage = {
@@ -14,6 +14,7 @@ type PropsSendMessage = {
 export const useChatContract = ({ currentAccount }: PropsSendMessage) => {
     const [processing, setProcessing] = useState(false);
     const [chatContract, setChatContract] = useState<Chat>();
+    const [correspondents, setCorrespondents] = useState<string[]>([]);
     const [conversations, setConversations] = useState<Chat.MessageStructOutput[]>();
 
     const ethereum = getEthereum();
@@ -22,14 +23,15 @@ export const useChatContract = ({ currentAccount }: PropsSendMessage) => {
         try {
             if (ethereum) {
                 // @ts-ignore: ethereum as ethers.providers.ExternalProvider
-                const provider = await new ethers.providers.Web3Provider(ethereum);
-                const signer = await provider.getSigner();
+                const provider = new ethers.providers.Web3Provider(ethereum);
+                console.log(provider);
+                const signer = provider.getSigner();
                 const ChatContract = new ethers.Contract(
                     CONTRACT_ADDRESS,
                     CONTRACT_ABI,
                     signer
-                );
-                setChatContract(chatContract);
+                ) as unknown;
+                setChatContract(ChatContract as Chat);
             } else {
                 console.log("Ethereum object doesn't exist!");
             }
@@ -39,7 +41,10 @@ export const useChatContract = ({ currentAccount }: PropsSendMessage) => {
     }
 
     async function post(_to: string, _text: string) {
-        if (!chatContract) return;
+        if (!chatContract) {
+            console.log("No chat contract");
+            return;
+        };
         try {
             const txn = await chatContract.post(_to, _text);
             setProcessing(true);
@@ -51,10 +56,21 @@ export const useChatContract = ({ currentAccount }: PropsSendMessage) => {
         }
     }
 
+    async function getCorrespondents() {
+        if (!chatContract) return;
+        try {
+            const correspondents = await chatContract.getCorrespondents();
+            setCorrespondents(correspondents);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
     async function getConversations(_addr1: string, _addr2: string) {
         if (!chatContract) return;
         try {
             const conversations = await chatContract.getConversations(_addr1, _addr2);
+            console.log(conversations);
             setConversations(conversations);
         } catch (err) {
             console.log(err);
@@ -63,12 +79,14 @@ export const useChatContract = ({ currentAccount }: PropsSendMessage) => {
 
     useEffect(() => {
         getChatContract();
-    }, [currentAccount, ethereum]);
+    }, [currentAccount, ethereum, conversations]);
 
     return {
         processing,
         conversations,
+        correspondents,
         post,
+        getCorrespondents,
         getConversations
     }
 }
