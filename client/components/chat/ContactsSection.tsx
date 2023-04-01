@@ -4,6 +4,7 @@ import { useWallet } from "../../hooks/useWallet";
 import { useChatContract } from "../../hooks/useChatContract";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { timestampToDate } from "../../utils/conversion";
 
 export type UserType = {
   name: string;
@@ -72,7 +73,9 @@ const ContactsSection = () => {
             <div className="absolute w-[calc(100%-80px)] h-full top-0 left-[80px]">
               <div className="w-full h-full p-3">
                 <p className="inline text-lg font-semibold">{user.name}</p>
-                <p className="float-right text-gray-500">{user.latestTime}</p>
+                <p className="float-right text-gray-500">
+                  {timestampToDate(user.latestTime)}
+                </p>
                 <br />
                 <p className="inline text-gray-500 truncate clear-right">
                   {user.latestMessage}
