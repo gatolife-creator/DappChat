@@ -23,8 +23,11 @@ const ChatSection = ({ to, className }: Props) => {
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const { message } = e.target as any;
-    post(to, message.value);
-    message.value = "";
+
+    if (message.value.trim()) {
+      post(to, message.value);
+      message.value = "";
+    }
   };
 
   useEffect(() => {
@@ -68,10 +71,8 @@ const ChatSection = ({ to, className }: Props) => {
           </div>
         </div>
       </Scrollbars>
-      {/* </div> */}
 
       <div className="absolute table bottom-0 left-0 w-full h-[5rem]">
-        {/* NOTE 多分formに変更した方がいい */}
         <form
           onSubmit={(e: React.FormEvent<HTMLFormElement>) => onSubmit(e)}
           className="absolute w-[95%] h-[48px] top-0 bottom-0 left-0 right-0 mx-auto my-auto"

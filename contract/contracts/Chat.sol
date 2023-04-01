@@ -17,6 +17,7 @@ contract Chat {
     mapping(uint256 => Message) private messages;
     uint256 private messageCount;
     mapping(address => EnumerableSet.AddressSet) private correspondents;
+    mapping(address => string) private names;
 
     event onPost(
         address indexed from,
@@ -39,6 +40,14 @@ contract Chat {
         correspondents[_to].add(fromAddress);
         messageCount++;
         emit onPost(fromAddress, _to, _text, block.timestamp);
+    }
+
+    function setName(string calldata _name) public {
+        names[msg.sender] = _name;
+    }
+
+    function getName() public view returns (string memory) {
+        return names[msg.sender];
     }
 
     function getCorrespondents() external view returns (address[] memory) {
