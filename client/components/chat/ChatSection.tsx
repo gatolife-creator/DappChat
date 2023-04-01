@@ -1,18 +1,17 @@
+import React from "react";
 import { IoIosSend } from "react-icons/io";
 import Bubble from "./Bubble";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useChatContract } from "../../hooks/useChatContract";
 import { useWallet } from "../../hooks/useWallet";
 import { Chat } from "../../typechain-types";
 
 type Props = {
-  correspondent?: string | undefined;
   to: string;
   className?: string | undefined;
 };
 
 const ChatSection = ({ to, className }: Props) => {
-  console.log("rendered");
   const [message, setMessage] = useState("");
   const { currentAccount } = useWallet();
   const { conversations, getConversations, processing, post } = useChatContract(
@@ -20,10 +19,6 @@ const ChatSection = ({ to, className }: Props) => {
       currentAccount,
     }
   );
-  const ref = useRef<HTMLInputElement>(null);
-  {
-    console.log(conversations);
-  }
 
   const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -35,8 +30,10 @@ const ChatSection = ({ to, className }: Props) => {
   };
 
   useEffect(() => {
-    getConversations(currentAccount as string, to);
-  }, [currentAccount]);
+    if (to) {
+      getConversations(to);
+    }
+  }, [currentAccount, to]);
 
   return (
     <div className={`relative w-[calc(100%-400px)] h-[75vh] ${className}`}>
@@ -45,30 +42,32 @@ const ChatSection = ({ to, className }: Props) => {
       >
         <div className="w-full]">
           <div className="m-5">
-            {conversations?.map((conversation: Chat.MessageStructOutput) => {
-              {
-                currentAccount === conversation.from && (
-                  <Bubble
-                    direction="left"
-                    name={conversation.from}
-                    address={conversation.from}
-                    timestamp={conversation.timestamp.toNumber()}
-                    text={conversation.text}
-                  />
-                );
-              }
-              {
-                currentAccount === conversation.to && (
-                  <Bubble
-                    direction="right"
-                    name={conversation.from}
-                    address={conversation.from}
-                    timestamp={conversation.timestamp.toNumber()}
-                    text={conversation.text}
-                  />
-                );
-              }
-            })}
+            {conversations.map(
+              (conversation: Chat.MessageStructOutput, index: number) => (
+                <React.Fragment key={index}>
+                  {currentAccount?.toLowerCase() ===
+                    conversation.from.toLowerCase() && (
+                    <Bubble
+                      direction="right"
+                      name={conversation.from.slice(0, 6)}
+                      address={conversation.from}
+                      timestamp={conversation.timestamp.toNumber()}
+                      text={conversation.text}
+                    />
+                  )}
+                  {currentAccount?.toLowerCase() ===
+                    conversation.to.toLowerCase() && (
+                    <Bubble
+                      direction="left"
+                      name={conversation.from.slice(0, 6)}
+                      address={conversation.from}
+                      timestamp={conversation.timestamp.toNumber()}
+                      text={conversation.text}
+                    />
+                  )}
+                </React.Fragment>
+              )
+            )}
             <div className="w-full h-[100px]" />
           </div>
         </div>
@@ -79,7 +78,6 @@ const ChatSection = ({ to, className }: Props) => {
           <input
             type="text"
             className="inline-block w-[calc(100%-72px)] input bg-[#F5F7FB]"
-            ref={ref}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               onChangeHandler(e)
             }

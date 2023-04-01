@@ -13,7 +13,11 @@ import type {
   Signer,
   utils,
 } from "ethers";
-import type { FunctionFragment, Result } from "@ethersproject/abi";
+import type {
+  FunctionFragment,
+  Result,
+  EventFragment,
+} from "@ethersproject/abi";
 import type { Listener, Provider } from "@ethersproject/providers";
 import type {
   TypedEventFilter,
@@ -41,7 +45,7 @@ export declare namespace Chat {
 
 export interface ChatInterface extends utils.Interface {
   functions: {
-    "getConversations(address,address)": FunctionFragment;
+    "getConversations(address)": FunctionFragment;
     "getCorrespondents()": FunctionFragment;
     "post(address,string)": FunctionFragment;
   };
@@ -52,7 +56,7 @@ export interface ChatInterface extends utils.Interface {
 
   encodeFunctionData(
     functionFragment: "getConversations",
-    values: [PromiseOrValue<string>, PromiseOrValue<string>]
+    values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
     functionFragment: "getCorrespondents",
@@ -73,8 +77,25 @@ export interface ChatInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "post", data: BytesLike): Result;
 
-  events: {};
+  events: {
+    "onPost(address,address,string,uint256)": EventFragment;
+  };
+
+  getEvent(nameOrSignatureOrTopic: "onPost"): EventFragment;
 }
+
+export interface onPostEventObject {
+  from: string;
+  to: string;
+  text: string;
+  timestamp: BigNumber;
+}
+export type onPostEvent = TypedEvent<
+  [string, string, string, BigNumber],
+  onPostEventObject
+>;
+
+export type onPostEventFilter = TypedEventFilter<onPostEvent>;
 
 export interface Chat extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -104,8 +125,7 @@ export interface Chat extends BaseContract {
 
   functions: {
     getConversations(
-      address1: PromiseOrValue<string>,
-      address2: PromiseOrValue<string>,
+      _other: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<[Chat.MessageStructOutput[]]>;
 
@@ -119,8 +139,7 @@ export interface Chat extends BaseContract {
   };
 
   getConversations(
-    address1: PromiseOrValue<string>,
-    address2: PromiseOrValue<string>,
+    _other: PromiseOrValue<string>,
     overrides?: CallOverrides
   ): Promise<Chat.MessageStructOutput[]>;
 
@@ -134,8 +153,7 @@ export interface Chat extends BaseContract {
 
   callStatic: {
     getConversations(
-      address1: PromiseOrValue<string>,
-      address2: PromiseOrValue<string>,
+      _other: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<Chat.MessageStructOutput[]>;
 
@@ -148,12 +166,24 @@ export interface Chat extends BaseContract {
     ): Promise<void>;
   };
 
-  filters: {};
+  filters: {
+    "onPost(address,address,string,uint256)"(
+      from?: PromiseOrValue<string> | null,
+      to?: PromiseOrValue<string> | null,
+      text?: null,
+      timestamp?: null
+    ): onPostEventFilter;
+    onPost(
+      from?: PromiseOrValue<string> | null,
+      to?: PromiseOrValue<string> | null,
+      text?: null,
+      timestamp?: null
+    ): onPostEventFilter;
+  };
 
   estimateGas: {
     getConversations(
-      address1: PromiseOrValue<string>,
-      address2: PromiseOrValue<string>,
+      _other: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -168,8 +198,7 @@ export interface Chat extends BaseContract {
 
   populateTransaction: {
     getConversations(
-      address1: PromiseOrValue<string>,
-      address2: PromiseOrValue<string>,
+      _other: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 

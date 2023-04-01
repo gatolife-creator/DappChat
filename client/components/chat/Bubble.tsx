@@ -34,7 +34,7 @@ const Bubble = ({ direction, name, address, timestamp, text }: Props) => {
               {name}
               <time className="text-xs opacity-50">{timestamp}</time>
             </div>
-            <div className="chat-bubble">{text}</div>
+            <div className="chat-bubble max-w-lg break-all">{text}</div>
             <div className="chat-footer opacity-50">Delivered</div>
           </div>
         </>
@@ -62,7 +62,7 @@ const Bubble = ({ direction, name, address, timestamp, text }: Props) => {
               {name}
               <time className="text-xs opacity-50">{timestamp}</time>
             </div>
-            <div className="chat-bubble">{text}</div>
+            <div className="chat-bubble max-w-lg break-all">{text}</div>
             <div className="chat-footer opacity-50">Seen at 12:46</div>
           </div>
         </>

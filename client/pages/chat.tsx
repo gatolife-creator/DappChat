@@ -1,36 +1,18 @@
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { AiFillSetting, AiOutlineUserAdd } from "react-icons/ai";
+import { AiFillSetting } from "react-icons/ai";
 import Layout from "../components/layout/Layout";
-import { useChatContract } from "../hooks/useChatContract";
 import { useWallet } from "../hooks/useWallet";
 import RequireWallet from "../components/layout/RequireWallet";
-import ContactsSection, { UserType } from "../components/chat/ContactsSection";
+import ContactsSection from "../components/chat/ContactsSection";
 import ChatSection from "../components/chat/ChatSection";
 import AddFriendModal from "../components/chat/AddFriendModal";
 
 const chat: NextPage = () => {
-  const [text, setText] = useState("");
   const router = useRouter();
   const to = router.query.to as string;
   const { currentAccount, connectWallet } = useWallet();
-  const {
-    processing,
-    conversations,
-    correspondents,
-    post,
-    getCorrespondents,
-    getConversations,
-  } = useChatContract({ currentAccount });
-
-  const userInfo: UserType[] = correspondents.map((address: string) => {
-    return {
-      name: address.slice(0, 6),
-      latestMessage: "hello",
-      latestTime: Date.now(),
-    };
-  });
 
   return (
     <Layout>
@@ -53,9 +35,8 @@ const chat: NextPage = () => {
             </div>
           </div>
           <div className="w-full clear-right">
-            <ContactsSection userInfo={userInfo} />
+            <ContactsSection />
             <ChatSection
-              correspondent={currentAccount}
               to={to}
               className="float-right"
             />

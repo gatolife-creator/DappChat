@@ -4,7 +4,7 @@ import abi from "../utils/Chat.json";
 import { getEthereum } from "../utils/ethereum";
 import { Chat } from "../typechain-types";
 
-const CONTRACT_ADDRESS = "0x1046DC619f31296455aCBBf76687B36C80d92113";
+const CONTRACT_ADDRESS = "0xD1ecd558AC7ebD8e69D2Fbad8622aE2A70c2a2aB";
 const CONTRACT_ABI = abi.abi;
 
 type PropsSendMessage = {
@@ -15,7 +15,7 @@ export const useChatContract = ({ currentAccount }: PropsSendMessage) => {
     const [processing, setProcessing] = useState(false);
     const [chatContract, setChatContract] = useState<Chat>();
     const [correspondents, setCorrespondents] = useState<string[]>([]);
-    const [conversations, setConversations] = useState<Chat.MessageStructOutput[]>();
+    const [conversations, setConversations] = useState<Chat.MessageStructOutput[]>([]);
 
     const ethereum = getEthereum();
 
@@ -24,7 +24,6 @@ export const useChatContract = ({ currentAccount }: PropsSendMessage) => {
             if (ethereum) {
                 // @ts-ignore: ethereum as ethers.providers.ExternalProvider
                 const provider = new ethers.providers.Web3Provider(ethereum);
-                console.log(provider);
                 const signer = provider.getSigner();
                 const ChatContract = new ethers.Contract(
                     CONTRACT_ADDRESS,
@@ -42,7 +41,6 @@ export const useChatContract = ({ currentAccount }: PropsSendMessage) => {
 
     async function post(_to: string, _text: string) {
         if (!chatContract) {
-            console.log("No chat contract");
             return;
         };
         try {
@@ -66,11 +64,10 @@ export const useChatContract = ({ currentAccount }: PropsSendMessage) => {
         }
     }
 
-    async function getConversations(_addr1: string, _addr2: string) {
+    async function getConversations(_addr: string) {
         if (!chatContract) return;
         try {
-            const conversations = await chatContract.getConversations(_addr1, _addr2);
-            console.log(conversations);
+            const conversations = await chatContract.getConversations(_addr);
             setConversations(conversations);
         } catch (err) {
             console.log(err);
@@ -79,7 +76,33 @@ export const useChatContract = ({ currentAccount }: PropsSendMessage) => {
 
     useEffect(() => {
         getChatContract();
-    }, [currentAccount, ethereum, conversations]);
+    }, [currentAccount, ethereum]);
+
+    useEffect(() => {
+        const onPost = (
+            _to: string,
+            _from: string,
+            _text: string,
+            _timestamp: number
+        ) => {
+            console.log("post from %s to %s", _from, _to);
+            if (_to.toLocaleLowerCase() === currentAccount) {
+                getConversations(_from);
+            } else if (_from.toLocaleLowerCase() === currentAccount) {
+                getConversations(_to);
+            }
+        };
+
+        if (chatContract) {
+            chatContract.on("onPost", onPost);
+        }
+
+        return () => {
+            if (chatContract) {
+                chatContract.off("onPost", onPost);
+            }
+        }
+    }, [chatContract]);
 
     return {
         processing,

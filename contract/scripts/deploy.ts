@@ -6,10 +6,10 @@ const main = async () => {
   await Chat.deployed();
   console.log("Deployed at: ", Chat.address);
 
-  const TippingSystemFactory = await ethers.getContractFactory("TippingSystem");
-  const TippingSystem = await TippingSystemFactory.deploy();
-  await TippingSystem.deployed();
-  console.log("Deployed at: ", TippingSystem.address);
+  // const TippingSystemFactory = await ethers.getContractFactory("TippingSystem");
+  // const TippingSystem = await TippingSystemFactory.deploy();
+  // await TippingSystem.deployed();
+  // console.log("Deployed at: ", TippingSystem.address); 
 }
 
 const runMain = async () => {
