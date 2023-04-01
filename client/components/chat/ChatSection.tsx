@@ -1,5 +1,6 @@
 import React from "react";
 import { IoIosSend } from "react-icons/io";
+import Scrollbars from "react-custom-scrollbars-2";
 import Bubble from "./Bubble";
 import { useEffect } from "react";
 import { useChatContract } from "../../hooks/useChatContract";
@@ -34,9 +35,7 @@ const ChatSection = ({ to, className }: Props) => {
 
   return (
     <div className={`relative w-[calc(100%-400px)] h-[75vh] ${className}`}>
-      <div
-        className={`w-full h-[75vh] bg-white rounded-3xl overflow-scroll scrollbar-hide`}
-      >
+      <Scrollbars autoHide className="w-full h-[75vh] bg-white rounded-3xl">
         <div className="w-full]">
           <div className="m-5">
             {conversations.map(
@@ -68,9 +67,10 @@ const ChatSection = ({ to, className }: Props) => {
             <div className="w-full h-[100px]" />
           </div>
         </div>
-      </div>
+      </Scrollbars>
+      {/* </div> */}
 
-      <div className="absolute table bottom-0 left-0 w-full h-[5rem] bg-white/30 backdrop-blur-sm">
+      <div className="absolute table bottom-0 left-0 w-full h-[5rem]">
         {/* NOTE 多分formに変更した方がいい */}
         <form
           onSubmit={(e: React.FormEvent<HTMLFormElement>) => onSubmit(e)}
