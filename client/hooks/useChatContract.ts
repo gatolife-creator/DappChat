@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { BigNumber, ethers } from 'ethers';
+import { ethers } from 'ethers';
 import abi from "../utils/Chat.json";
 import { getEthereum } from "../utils/ethereum";
 import { Chat } from "../typechain-types";

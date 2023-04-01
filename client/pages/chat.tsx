@@ -1,6 +1,5 @@
 import { NextPage } from "next";
 import { useRouter } from "next/router";
-import { useState } from "react";
 import { AiFillSetting } from "react-icons/ai";
 import Layout from "../components/layout/Layout";
 import { useWallet } from "../hooks/useWallet";

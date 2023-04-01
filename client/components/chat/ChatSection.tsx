@@ -1,7 +1,7 @@
 import React from "react";
 import { IoIosSend } from "react-icons/io";
 import Bubble from "./Bubble";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useChatContract } from "../../hooks/useChatContract";
 import { useWallet } from "../../hooks/useWallet";
 import { Chat } from "../../typechain-types";
@@ -12,7 +12,6 @@ type Props = {
 };
 
 const ChatSection = ({ to, className }: Props) => {
-  const [message, setMessage] = useState("");
   const { currentAccount } = useWallet();
   const { conversations, getConversations, processing, post } = useChatContract(
     {
@@ -20,13 +19,11 @@ const ChatSection = ({ to, className }: Props) => {
     }
   );
 
-  const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setMessage(e.target.value);
-  };
-
-  const onClickHandler = () => {
-    post(to, message);
+    const { message } = e.target as any;
+    post(to, message.value);
+    message.value = "";
   };
 
   useEffect(() => {
@@ -72,29 +69,31 @@ const ChatSection = ({ to, className }: Props) => {
           </div>
         </div>
       </div>
+
       <div className="absolute table bottom-0 left-0 w-full h-[5rem] bg-white/30 backdrop-blur-sm">
         {/* NOTE 多分formに変更した方がいい */}
-        <div className="absolute w-[95%] h-[48px] top-0 bottom-0 left-0 right-0 mx-auto my-auto">
+        <form
+          onSubmit={(e: React.FormEvent<HTMLFormElement>) => onSubmit(e)}
+          className="absolute w-[95%] h-[48px] top-0 bottom-0 left-0 right-0 mx-auto my-auto"
+        >
           <input
             type="text"
+            name="message"
             className="inline-block w-[calc(100%-72px)] input bg-[#F5F7FB]"
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              onChangeHandler(e)
-            }
           />
           {processing && (
             <button className="btn btn-circle btn-disabled loading float-right" />
           )}
           {!processing && (
             <button
+              type="submit"
               className="btn btn-circle btn-success float-right"
-              onClick={() => onClickHandler()}
             >
               <IoIosSend fontSize={24} />
             </button>
           )}
-          <div className="clear-right"></div>
-        </div>
+          <div className="clear-right" />
+        </form>
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 import Avatar from "boring-avatars";
-import { timestampToDate } from "../../utils/conversion";
+import { solidityTimestampToDate } from "../../utils/conversion";
 
 type Props = {
   direction: "left" | "right";
@@ -34,7 +34,7 @@ const Bubble = ({ direction, name, address, timestamp, text }: Props) => {
             <div className="chat-header">{name}</div>
             <div className="chat-bubble max-w-lg break-all">{text}</div>
             <time className="chat-footer opacity-50">
-              {timestampToDate(timestamp)}
+              {solidityTimestampToDate(timestamp)}
             </time>
           </div>
         </>
@@ -61,7 +61,7 @@ const Bubble = ({ direction, name, address, timestamp, text }: Props) => {
             <div className="chat-header">{name}</div>
             <div className="chat-bubble max-w-lg break-all">{text}</div>
             <time className="chat-footer opacity-50">
-              {timestampToDate(timestamp)}
+              {solidityTimestampToDate(timestamp)}
             </time>
           </div>
         </>
