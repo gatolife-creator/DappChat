@@ -14,6 +14,13 @@ contract Chat {
         uint256 timestamp;
     }
 
+    struct CorrespondentThumb {
+        address addr;
+        string name;
+        string text;
+        uint256 timestamp;
+    }
+
     mapping(uint256 => Message) private messages;
     uint256 private messageCount;
     mapping(address => EnumerableSet.AddressSet) private correspondents;
@@ -42,15 +49,38 @@ contract Chat {
         emit onPost(fromAddress, _to, _text, block.timestamp);
     }
 
-    function setName(string calldata _name) public {
+    function changeName(string calldata _name) public {
         names[msg.sender] = _name;
     }
 
-    function getName() public view returns (string memory) {
-        return names[msg.sender];
+    function getName(address _addr) public view returns (string memory) {
+        return names[_addr];
     }
 
-    function getCorrespondents() external view returns (address[] memory) {
+    function getCorrespondentThumbs(
+        address[] memory _addrs
+    ) public view returns (CorrespondentThumb[] memory) {
+        CorrespondentThumb[] memory thumbsArray = new CorrespondentThumb[](
+            _addrs.length
+        );
+        for (uint256 i = 0; i < _addrs.length; i++) {
+            address addr = _addrs[i];
+            string memory name = names[addr];
+            Message[] memory localMessages = getConversations(addr);
+            uint256 localMessageCount = localMessages.length;
+            Message memory message = messages[localMessageCount - 1];
+            CorrespondentThumb memory thumb = CorrespondentThumb(
+                addr,
+                name,
+                message.text,
+                message.timestamp
+            );
+            thumbsArray[i] = thumb;
+        }
+        return thumbsArray;
+    }
+
+    function getCorrespondents() public view returns (address[] memory) {
         EnumerableSet.AddressSet storage set = correspondents[msg.sender];
         address[] memory correspondentsArray = new address[](set.length());
         for (uint256 i = 0; i < set.length(); i++) {
@@ -61,7 +91,7 @@ contract Chat {
 
     function getConversations(
         address _other
-    ) external view returns (Message[] memory) {
+    ) public view returns (Message[] memory) {
         require(_other != address(0), "Invalid address");
         Message[] memory resultMessages = new Message[](messageCount);
         uint256 index = 0;

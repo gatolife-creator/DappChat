@@ -6,7 +6,7 @@ const Home: NextPage = () => {
   return (
     <>
       <Layout>
-        <div className="grid grid-flow-row-dense grid-cols-3 grid-rows-3 ...">
+        <div className="grid grid-flow-row-dense grid-cols-3 grid-rows-3 mt-10">
           <Card
             title="Chat"
             description="description"

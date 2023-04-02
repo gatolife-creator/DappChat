@@ -45,15 +45,26 @@ export declare namespace Chat {
 
 export interface ChatInterface extends utils.Interface {
   functions: {
+    "changeName(string)": FunctionFragment;
     "getConversations(address)": FunctionFragment;
     "getCorrespondents()": FunctionFragment;
+    "getName(address)": FunctionFragment;
     "post(address,string)": FunctionFragment;
   };
 
   getFunction(
-    nameOrSignatureOrTopic: "getConversations" | "getCorrespondents" | "post"
+    nameOrSignatureOrTopic:
+      | "changeName"
+      | "getConversations"
+      | "getCorrespondents"
+      | "getName"
+      | "post"
   ): FunctionFragment;
 
+  encodeFunctionData(
+    functionFragment: "changeName",
+    values: [PromiseOrValue<string>]
+  ): string;
   encodeFunctionData(
     functionFragment: "getConversations",
     values: [PromiseOrValue<string>]
@@ -63,10 +74,15 @@ export interface ChatInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "getName",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
     functionFragment: "post",
     values: [PromiseOrValue<string>, PromiseOrValue<string>]
   ): string;
 
+  decodeFunctionResult(functionFragment: "changeName", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getConversations",
     data: BytesLike
@@ -75,6 +91,7 @@ export interface ChatInterface extends utils.Interface {
     functionFragment: "getCorrespondents",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "getName", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "post", data: BytesLike): Result;
 
   events: {
@@ -124,12 +141,22 @@ export interface Chat extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
+    changeName(
+      _name: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     getConversations(
       _other: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<[Chat.MessageStructOutput[]]>;
 
     getCorrespondents(overrides?: CallOverrides): Promise<[string[]]>;
+
+    getName(
+      _addr: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
 
     post(
       _to: PromiseOrValue<string>,
@@ -138,12 +165,22 @@ export interface Chat extends BaseContract {
     ): Promise<ContractTransaction>;
   };
 
+  changeName(
+    _name: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   getConversations(
     _other: PromiseOrValue<string>,
     overrides?: CallOverrides
   ): Promise<Chat.MessageStructOutput[]>;
 
   getCorrespondents(overrides?: CallOverrides): Promise<string[]>;
+
+  getName(
+    _addr: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<string>;
 
   post(
     _to: PromiseOrValue<string>,
@@ -152,12 +189,22 @@ export interface Chat extends BaseContract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
+    changeName(
+      _name: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     getConversations(
       _other: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<Chat.MessageStructOutput[]>;
 
     getCorrespondents(overrides?: CallOverrides): Promise<string[]>;
+
+    getName(
+      _addr: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<string>;
 
     post(
       _to: PromiseOrValue<string>,
@@ -182,12 +229,22 @@ export interface Chat extends BaseContract {
   };
 
   estimateGas: {
+    changeName(
+      _name: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     getConversations(
       _other: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     getCorrespondents(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getName(
+      _addr: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     post(
       _to: PromiseOrValue<string>,
@@ -197,12 +254,22 @@ export interface Chat extends BaseContract {
   };
 
   populateTransaction: {
+    changeName(
+      _name: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
     getConversations(
       _other: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     getCorrespondents(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    getName(
+      _addr: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     post(
       _to: PromiseOrValue<string>,

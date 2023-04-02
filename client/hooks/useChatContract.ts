@@ -4,7 +4,7 @@ import abi from "../utils/Chat.json";
 import { getEthereum } from "../utils/ethereum";
 import { Chat } from "../typechain-types";
 
-const CONTRACT_ADDRESS = "0xD1ecd558AC7ebD8e69D2Fbad8622aE2A70c2a2aB";
+const CONTRACT_ADDRESS = "0xa8e55A6caC9BDd9264D30404110dFC50dA6a1315";
 const CONTRACT_ABI = abi.abi;
 
 type PropsSendMessage = {
@@ -14,6 +14,7 @@ type PropsSendMessage = {
 export const useChatContract = ({ currentAccount }: PropsSendMessage) => {
     const [processing, setProcessing] = useState(false);
     const [chatContract, setChatContract] = useState<Chat>();
+    const [name, setName] = useState(currentAccount);
     const [correspondents, setCorrespondents] = useState<string[]>([]);
     const [conversations, setConversations] = useState<Chat.MessageStructOutput[]>([]);
 
@@ -53,6 +54,39 @@ export const useChatContract = ({ currentAccount }: PropsSendMessage) => {
             alert("Failed to post");
         }
     }
+
+    async function changeName(_name: string) {
+        if (!chatContract) {
+            return;
+        }
+
+        try {
+            const txn = await chatContract.changeName(_name);
+            setProcessing(true);
+            await txn.wait();
+            setProcessing(false);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    async function getName(_addr: string) {
+        if (!chatContract) {
+            return;
+        }
+        try {
+            const name = await chatContract.getName(_addr);
+            console.log(name);
+            if (name) {
+                setName(name);
+            } else {
+                setName(currentAccount?.slice(0, 6));
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
 
     async function getCorrespondents() {
         if (!chatContract) return;
@@ -106,9 +140,12 @@ export const useChatContract = ({ currentAccount }: PropsSendMessage) => {
 
     return {
         processing,
+        name,
         conversations,
         correspondents,
         post,
+        getName,
+        changeName,
         getCorrespondents,
         getConversations
     }
