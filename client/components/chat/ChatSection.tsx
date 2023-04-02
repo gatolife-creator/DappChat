@@ -2,7 +2,7 @@ import React from "react";
 import { IoIosSend } from "react-icons/io";
 import Scrollbars from "react-custom-scrollbars-2";
 import Bubble from "./Bubble";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useChatContract } from "../../hooks/useChatContract";
 import { useWallet } from "../../hooks/useWallet";
 import { Chat } from "../../typechain-types";
@@ -15,11 +15,11 @@ type Props = {
 
 const ChatSection = ({ to, className }: Props) => {
   const { currentAccount } = useWallet();
-  const { conversations, getConversations, processing, post } = useChatContract(
-    {
+  const { getName, conversations, getConversations, processing, post } =
+    useChatContract({
       currentAccount,
-    }
-  );
+    });
+  const [yourName, setYourName] = useState("");
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -31,9 +31,15 @@ const ChatSection = ({ to, className }: Props) => {
     }
   };
 
+  const getUserName = async () => {
+    const tmpYourName = (await getName(currentAccount as string)) as string;
+    setYourName(tmpYourName);
+  };
+
   useEffect(() => {
     if (to) {
       getConversations(to);
+      getUserName();
     }
   }, [currentAccount, to]);
 
@@ -60,7 +66,7 @@ const ChatSection = ({ to, className }: Props) => {
                       conversation.from.toLowerCase() && (
                       <Bubble
                         direction="right"
-                        name={conversation.from.slice(0, 6)}
+                        name={yourName}
                         address={conversation.from}
                         timestamp={conversation.timestamp.toNumber()}
                         text={conversation.text}

@@ -75,12 +75,15 @@ export const useChatContract = ({ currentAccount }: PropsSendMessage) => {
             return;
         }
         try {
+            setProcessing(true);
             const name = await chatContract.getName(_addr);
-            console.log(name);
+
             if (name) {
-                setName(name);
+                setProcessing(false);
+                return name;
             } else {
-                setName(currentAccount?.slice(0, 6));
+                setProcessing(false);
+                return currentAccount?.slice(0, 6);
             }
         } catch (err) {
             console.log(err);

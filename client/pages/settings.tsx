@@ -9,7 +9,8 @@ import { useEffect, useState } from "react";
 const setting: NextPage = () => {
   const { currentAccount, connectWallet } = useWallet();
   const [inputtedName, setInputtedName] = useState("");
-  const { name, getName, changeName } = useChatContract({ currentAccount });
+  const { getName, changeName } = useChatContract({ currentAccount });
+  const [name, setName] = useState("");
 
   const onClickHandler = () => {
     changeName(inputtedName);
@@ -20,8 +21,13 @@ const setting: NextPage = () => {
   };
 
   useEffect(() => {
-    getName(currentAccount as string);
+    getUserName();
   }, [currentAccount]);
+
+  const getUserName = async () => {
+    const name = (await getName(currentAccount as string)) as string;
+    setName(name);
+  };
 
   return (
     <Layout>

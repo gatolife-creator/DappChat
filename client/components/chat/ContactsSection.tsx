@@ -16,7 +16,7 @@ export type UserType = {
 const ContactsSection = () => {
   const router = useRouter();
   const { currentAccount } = useWallet();
-  const { name, getName, getCorrespondents, correspondents } = useChatContract({
+  const { getName, getCorrespondents, correspondents } = useChatContract({
     currentAccount,
   });
 
