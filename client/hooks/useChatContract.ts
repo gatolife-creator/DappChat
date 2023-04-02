@@ -101,8 +101,10 @@ export const useChatContract = ({ currentAccount }: PropsSendMessage) => {
     async function getConversations(_addr: string) {
         if (!chatContract) return;
         try {
+            setProcessing(true);
             const conversations = await chatContract.getConversations(_addr);
             setConversations(conversations);
+            setProcessing(false);
         } catch (err) {
             console.log(err);
         }
@@ -140,7 +142,6 @@ export const useChatContract = ({ currentAccount }: PropsSendMessage) => {
 
     return {
         processing,
-        name,
         conversations,
         correspondents,
         post,

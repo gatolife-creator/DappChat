@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { useChatContract } from "../../hooks/useChatContract";
 import { useWallet } from "../../hooks/useWallet";
 import { Chat } from "../../typechain-types";
+import { Dna } from "react-loader-spinner";
 
 type Props = {
   to: string;
@@ -39,36 +40,48 @@ const ChatSection = ({ to, className }: Props) => {
   return (
     <div className={`relative w-[calc(100%-400px)] h-[75vh] ${className}`}>
       <Scrollbars autoHide className="w-full h-[75vh] bg-white rounded-3xl">
-        <div className="w-full]">
-          <div className="m-5">
-            {conversations.map(
-              (conversation: Chat.MessageStructOutput, index: number) => (
-                <React.Fragment key={index}>
-                  {currentAccount?.toLowerCase() ===
-                    conversation.from.toLowerCase() && (
-                    <Bubble
-                      direction="right"
-                      name={conversation.from.slice(0, 6)}
-                      address={conversation.from}
-                      timestamp={conversation.timestamp.toNumber()}
-                      text={conversation.text}
-                    />
-                  )}
-                  {currentAccount?.toLowerCase() ===
-                    conversation.to.toLowerCase() && (
-                    <Bubble
-                      direction="left"
-                      name={conversation.from.slice(0, 6)}
-                      address={conversation.from}
-                      timestamp={conversation.timestamp.toNumber()}
-                      text={conversation.text}
-                    />
-                  )}
-                </React.Fragment>
-              )
-            )}
-            <div className="w-full h-[100px]" />
-          </div>
+        <div className="w-full min-h-full">
+          {processing && (
+            <Dna
+              visible={true}
+              height="80px"
+              width="80px"
+              ariaLabel="dna-loading"
+              wrapperClass=" absolute top-0 bottom-0 left-0 right-0 mx-auto my-auto"
+            />
+          )}
+
+          {!processing && (
+            <div className="m-5">
+              {conversations.map(
+                (conversation: Chat.MessageStructOutput, index: number) => (
+                  <React.Fragment key={index}>
+                    {currentAccount?.toLowerCase() ===
+                      conversation.from.toLowerCase() && (
+                      <Bubble
+                        direction="right"
+                        name={conversation.from.slice(0, 6)}
+                        address={conversation.from}
+                        timestamp={conversation.timestamp.toNumber()}
+                        text={conversation.text}
+                      />
+                    )}
+                    {currentAccount?.toLowerCase() ===
+                      conversation.to.toLowerCase() && (
+                      <Bubble
+                        direction="left"
+                        name={conversation.from.slice(0, 6)}
+                        address={conversation.from}
+                        timestamp={conversation.timestamp.toNumber()}
+                        text={conversation.text}
+                      />
+                    )}
+                  </React.Fragment>
+                )
+              )}
+              <div className="w-full h-[100px]" />
+            </div>
+          )}
         </div>
       </Scrollbars>
 
