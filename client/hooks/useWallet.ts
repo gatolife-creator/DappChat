@@ -41,6 +41,7 @@ export const useWallet = (): ReturnUseWallet => {
       if (accounts.length !== 0) {
         const account = accounts[0];
         setCurrentAccount(account);
+        await requestSwitchNetwork();
       } else {
         console.log("No authorized account found");
       }
@@ -48,6 +49,48 @@ export const useWallet = (): ReturnUseWallet => {
       console.log(err);
     }
   };
+
+  const requestSwitchNetwork = async () => {
+    if (!ethereum) {
+      return;
+    }
+
+    const targetId = "0x13881";
+    const currentChainId = await ethereum.request({
+      method: 'eth_chainId',
+    });
+
+    if (currentChainId !== targetId) {
+      try {
+        await ethereum?.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: '0x13881' }],
+        })
+      } catch (error) {
+        try {
+          await ethereum?.request({
+            method: 'wallet_addEthereumChain',
+            params: [
+              {
+                chainId: '0x13881',
+                blockExplorerUrls: ['https://mumbai.polygonscan.com/'],
+                chainName: 'Mumbai Mainnet',
+                nativeCurrency: {
+                  decimals: 18,
+                  name: 'Polygon',
+                  symbol: 'MATIC'
+                },
+                rpcUrls: ['https://matic-mumbai.chainstacklabs.com']
+              },
+            ],
+          })
+        } catch (err) {
+          console.log(err);
+        }
+      }
+
+    }
+  }
 
   useEffect(() => {
     checkIfWalletIsConnected();

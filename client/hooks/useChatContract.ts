@@ -23,7 +23,7 @@ export const useChatContract = ({ currentAccount }: PropsSendMessage) => {
         try {
             if (ethereum) {
                 // @ts-ignore: ethereum as ethers.providers.ExternalProvider
-                const provider = new ethers.providers.Web3Provider(ethereum);
+                const provider = new ethers.providers.Web3Provider(ethereum, "any");
                 const signer = provider.getSigner();
                 const ChatContract = new ethers.Contract(
                     CONTRACT_ADDRESS,

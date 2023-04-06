@@ -17,10 +17,10 @@ const Navbar = () => {
       <div className="flex-none">
         <ul className="menu menu-horizontal px-1">
           <li>
-            <Link href="">
+            <p>
               Wallet: {currentAccount?.slice(0, 6)}...
               {currentAccount?.slice(-4)}
-            </Link>
+            </p>
           </li>
           <li>
             <Link href="/chat">Chat</Link>

@@ -67,7 +67,7 @@ const ChatSection = ({ to, className }: Props) => {
                       <Bubble
                         direction="right"
                         name={yourName}
-                        address={conversation.from}
+                        address={currentAccount}
                         timestamp={conversation.timestamp.toNumber()}
                         text={conversation.text}
                       />
