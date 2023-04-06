@@ -10,6 +10,7 @@ if (process.env.PRIVATE_KEY === undefined) {
 
 const config: HardhatUserConfig = {
   solidity: "0.8.18",
+  defaultNetwork: "mumbai",
   networks: {
     mumbai: {
       url: process.env.ALCHEMY_URL,

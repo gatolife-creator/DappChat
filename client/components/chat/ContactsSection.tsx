@@ -73,7 +73,7 @@ const ContactsSection = () => {
                 <div className="w-full h-full p-3">
                   <p className="inline text-lg font-semibold">{user.name}</p>
                   <p className="float-right text-gray-500">
-                    {timestampToDate(user.latestTime)}
+                    {"-/- --:--"}
                   </p>
                   <br />
                   <p className="inline text-gray-500 truncate clear-right">

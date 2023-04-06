@@ -93,7 +93,7 @@ const ChatSection = ({ to, className }: Props) => {
 
       <div className="absolute table bottom-0 left-0 w-full h-[5rem]">
         <form
-          onSubmit={(e: React.FormEvent<HTMLFormElement>) => onSubmit(e)}
+          onSubmit={onSubmit}
           className="absolute w-[95%] h-[48px] top-0 bottom-0 left-0 right-0 mx-auto my-auto"
         >
           <input

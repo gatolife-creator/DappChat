@@ -26,7 +26,11 @@ const setting: NextPage = () => {
 
   const getUserName = async () => {
     const name = (await getName(currentAccount as string)) as string;
-    setName(name);
+    if (name) {
+      setName(name);
+    } else {
+      setName(currentAccount?.slice(0, 6)!);
+    }
   };
 
   return (

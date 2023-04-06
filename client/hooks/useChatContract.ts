@@ -4,7 +4,7 @@ import abi from "../utils/Chat.json";
 import { getEthereum } from "../utils/ethereum";
 import { Chat } from "../typechain-types";
 
-const CONTRACT_ADDRESS = "0xa8e55A6caC9BDd9264D30404110dFC50dA6a1315";
+const CONTRACT_ADDRESS = "0x275569E24Cd337d4324E843357000be4060FDb3D";
 const CONTRACT_ABI = abi.abi;
 
 type PropsSendMessage = {
@@ -14,7 +14,6 @@ type PropsSendMessage = {
 export const useChatContract = ({ currentAccount }: PropsSendMessage) => {
     const [processing, setProcessing] = useState(false);
     const [chatContract, setChatContract] = useState<Chat>();
-    const [name, setName] = useState(currentAccount);
     const [correspondents, setCorrespondents] = useState<string[]>([]);
     const [conversations, setConversations] = useState<Chat.MessageStructOutput[]>([]);
 

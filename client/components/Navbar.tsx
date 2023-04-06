@@ -11,7 +11,7 @@ const Navbar = () => {
           href="/"
           className="btn btn-ghost no-animation normal-case text-xl"
         >
-          KUChat
+          ChatApp
         </Link>
       </div>
       <div className="flex-none">

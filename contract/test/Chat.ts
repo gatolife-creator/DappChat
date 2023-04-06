@@ -1,12 +1,18 @@
 import hre from "hardhat";
 import { assert, expect } from "chai";
+import { Chat__factory, Chat } from "../typechain-types";
 
 describe("Chat", () => {
+    let Chat: Chat__factory;
+    let chat: Chat;
+
+    beforeEach(async() => {
+        Chat = await hre.ethers.getContractFactory("Chat");
+        chat = await Chat.deploy();
+    })
+
     it("Should get the message", async () => {
         const [person1, person2] = await hre.ethers.getSigners();
-
-        const Chat = await hre.ethers.getContractFactory("Chat");
-        const chat = await Chat.deploy();
 
         chat.connect(person1).post(person2.address, "こんにちは");
         const conversations = await chat.connect(person1).getConversations(person2.address);
@@ -14,11 +20,16 @@ describe("Chat", () => {
         expect(conversations[0].text).to.equal("こんにちは");
     })
 
+    it("Should get empty messages", async () => {
+        const [person1, person2] = await hre.ethers.getSigners();
+
+        const conversations = await chat.connect(person1).getConversations(person2.address);
+
+        expect(conversations).to.be.empty;
+    })
+
     it("Should get correspondents", async () => {
         const [person1, person2, person3] = await hre.ethers.getSigners();
-
-        const Chat = await hre.ethers.getContractFactory("Chat");
-        const chat = await Chat.deploy();
 
         await chat.connect(person1).post(person2.address, "こんにちは");
         await chat.connect(person1).post(person3.address, "こんにちは");
@@ -27,11 +38,16 @@ describe("Chat", () => {
         expect(assert.sameMembers(correspondents, [person2.address, person3.address]));
     })
 
-    it("Should get user name", async () => {
+    it("Should get empty correspondents array", async () => {
         const [person1] = await hre.ethers.getSigners();
 
-        const Chat = await hre.ethers.getContractFactory("Chat");
-        const chat = await Chat.deploy();
+        const correspondents = await chat.connect(person1).getCorrespondents();
+
+        expect(correspondents).to.be.empty;
+    })
+
+    it("Should get user name", async () => {
+        const [person1] = await hre.ethers.getSigners();
 
         await chat.connect(person1).changeName("がとらいふ");
         const name = await chat.getName(person1.address);
@@ -41,9 +57,6 @@ describe("Chat", () => {
 
     it("Should get correspondent thumbs", async () => {
         const [person1, person2, person3, person4] = await hre.ethers.getSigners();
-
-        const Chat = await hre.ethers.getContractFactory("Chat");
-        const chat = await Chat.deploy();
 
         const firstMessage = "こんにちは、2さん";
         const secondMessage = "こんにちは、3さん";

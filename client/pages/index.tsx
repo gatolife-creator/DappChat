@@ -13,18 +13,6 @@ const Home: NextPage = () => {
             link="/chat"
             className="mx-auto"
           />
-          <Card
-            title="title"
-            description="description"
-            link="/"
-            className="mx-auto"
-          />
-          <Card
-            title="title"
-            description="description"
-            link="/"
-            className="mx-auto"
-          />
         </div>
       </Layout>
     </>
