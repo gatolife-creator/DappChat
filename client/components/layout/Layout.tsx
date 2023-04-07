@@ -12,10 +12,10 @@ export default function Layout({ children }: Props) {
   return (
     <>
       <Head>
-        <title>KUChat</title>
+        <title>ChatApp</title>
         <meta
           name="description"
-          content="KUChat ~Decentralized Educational Platform~"
+          content="ChatApp"
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
