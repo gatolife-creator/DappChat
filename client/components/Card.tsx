@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import { motion } from "framer-motion";
+import { FC } from "react";
 
 type Props = {
   title: string;
@@ -8,7 +9,7 @@ type Props = {
   className?: string;
 };
 
-const Card = ({ title, description, link, className }: Props) => {
+const Card: FC<Props> = ({ title, description, link, className }) => {
   const router = useRouter();
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {

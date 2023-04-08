@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { FC, ReactNode } from "react";
 
 type Props = {
   children: ReactNode;
@@ -6,7 +6,11 @@ type Props = {
   connectWallet: () => void;
 };
 
-const RequireWallet = ({ children, currentAccount, connectWallet }: Props) => {
+const RequireWallet: FC<Props> = ({
+  children,
+  currentAccount,
+  connectWallet,
+}) => {
   return (
     <>
       {!currentAccount && (

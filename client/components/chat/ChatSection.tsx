@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FC } from "react";
 import { IoIosSend } from "react-icons/io";
 import Scrollbars from "react-custom-scrollbars-2";
 import Bubble from "./Bubble";
@@ -13,7 +13,7 @@ type Props = {
   className?: string | undefined;
 };
 
-const ChatSection = ({ to, className }: Props) => {
+const ChatSection: FC<Props> = ({ to, className }) => {
   const { currentAccount } = useWallet();
   const { getName, conversations, getConversations, processing, post } =
     useChatContract({

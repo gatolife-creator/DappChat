@@ -1,7 +1,10 @@
-import { NextPage } from "next";
-import { ReactNode } from "react";
+import { FC, ReactNode } from "react";
 
-const Main = ({ children }: { children: ReactNode }) => {
+type Props = {
+  children: ReactNode;
+};
+
+const Main: FC<Props> = ({ children }) => {
   return (
     <>
       <div className="w-full h-[64px]" />

@@ -1,3 +1,4 @@
+import { FC } from "react";
 import Avatar from "boring-avatars";
 import { solidityTimestampToDate } from "../../utils/conversion";
 
@@ -9,7 +10,7 @@ type Props = {
   text: string;
 };
 
-const Bubble = ({ direction, name, address, timestamp, text }: Props) => {
+const Bubble: FC<Props> = ({ direction, name, address, timestamp, text }) => {
   return (
     <>
       {direction === "left" && (
